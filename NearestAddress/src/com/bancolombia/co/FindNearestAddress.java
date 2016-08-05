@@ -19,9 +19,11 @@ import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.regex.Pattern;
 
 public class FindNearestAddress {
 
+	private static String[] currentAddress;
 	public static void main(String[] args) {
 		Path path = Paths.get("./resources/medellin100k.csv");
 		byte[] data;
@@ -35,7 +37,7 @@ public class FindNearestAddress {
 				TreeMap<Integer,Location> parserCoordinates = Utils.parserCoordinates(ISCoor);
 				//Collections.binarySearch(parserCoordinates, new Comparator());
 				
-				String[] currentAddress = s.split(" ");
+				currentAddress = s.split(" ");
 
 				SortedSet<Map.Entry<Integer,Location>> sortedset = new TreeSet<Map.Entry<Integer,Location>>(
 						new Comparator<Map.Entry<Integer,Location>>() {
@@ -43,8 +45,23 @@ public class FindNearestAddress {
 							public int compare(Map.Entry<Integer,Location> e1,
 									Map.Entry<Integer,Location> e2) {
 								//Here I need to do the comparation
+								Pattern patternCl = Pattern.compile( "(\\CL+)" );
+								Pattern patternKr = Pattern.compile( "(\\KR+)" );
+								Pattern patternNum = Pattern.compile( "[0-9]" );
+								Pattern patternLet = Pattern.compile( "[a-zA-Z]" );
+								
 								Location loc1 = e1.getValue();
 								Location loc2 = e1.getValue();
+								String[] address1 = loc1.getAddress().split(" ");
+								String[] address2 = loc2.getAddress().split(" ");
+								
+								if(currentAddress!=null && currentAddress.length>0 && address1!=null && address2!=null && address1.length>0 && address2.length>0){
+									if(patternCl.matcher(currentAddress[0]).matches() && patternCl.matcher(address1[0]).matches()){
+										if(currentAddress[1]!=null && address1[1]!=null){
+											
+										}
+									}
+								}
 								return 0;
 							}
 						});
